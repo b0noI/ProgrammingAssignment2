@@ -1,23 +1,29 @@
-
-## functions calculating solve for matrix with caching. 
+## functions calculating solve for matrix (with caching). 
 ## If solve already calculated for matrix it will be returned from cache
 ## If user set's new matrix, cache will be dropped
 
 
-## makeCacheMatrix - create object with 4 fumctions:
-## set - set matrix and delete cached solve
-## get - get matrix
+## makeCacheMatrix - create object with 4 functions:
+## set - set matrix (also deleting cached solve)
+## get - get matrix (getting matrix)
 ## setsolve - save solve to cache
 ## getsolve - load solve from cache
-## input of function - matrix()
-makeCacheMatrix <- function(x = matrix()) {
+## default input of function - matrix()
+makeCacheMatrix <- function(matrix = matrix()) {
   solve <- NULL
-  set <- function(y) {
-    matrix <<- y
+  ## set new matrix and clear cahce
+  set <- function(new_matrix) {
+    matrix <<- new_matrix
     solve <<- NULL
   }
-  get <- function() x
-  setsolve <- function(y) solve <<- y
+  
+  ## get matrix
+  get <- function() matrix
+  
+  ## saving solve to cache
+  setsolve <- function(new_solve) solve <<- new_solve
+  
+  ## getting solve from cache
   getsolve <- function() solve
   list(set = set, 
        get = get, 
@@ -26,17 +32,19 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-## cacheSolve will try to read solve for matrix from cache and if fails it will calculate solve and save it to cache
-## if it's read solve from cach it's print: "getting cached data"
+## cacheSolve will try to read matrix solve from cache and if fails it will calculate solve and save it to cache
 ## input - tuple that can be created with makeCacheMatrix function
 cacheSolve <- function(x, ...) {
-  s <- x$getsolve()
-  if(!is.null(s)) {
+  ## reading solve from cache
+  solve <- x$getsolve()
+  ## checking solve from cache
+  if(!is.null(solve)) {
     message("getting cached data")
-    return(s)
+    return(solve)
   }
-  data <- x$get()
-  s <- solve(data, ...)
-  x$setsolve(s)
-  s
+  matrix <- x$get()
+  solve <- solve(matrix, ...)
+  ## setting solve to cache
+  x$setsolve(solve)
+  solve
 }
