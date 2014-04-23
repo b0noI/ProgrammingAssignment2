@@ -39,7 +39,6 @@ cacheSolve <- function(x, ...) {
   solve <- x$getsolve()
   ## checking solve from cache
   if(!is.null(solve)) {
-    message("getting cached data")
     return(solve)
   }
   matrix <- x$get()
